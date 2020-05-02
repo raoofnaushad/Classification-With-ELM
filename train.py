@@ -5,6 +5,7 @@ import argparse
 import os
 import numpy as np
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--n_hidden_nodes', type=int, default=1024)
 parser.add_argument('--loss',
@@ -28,6 +29,8 @@ def main(args):
     # ===============================
     n_classes = 10
     (x_train, t_train), (x_test, t_test) = mnist.load_data()
+    
+    # print(x_train)
 
     # ===============================
     # Preprocess
@@ -39,9 +42,10 @@ def main(args):
     t_train = to_categorical(t_train, n_classes).astype(np.float32)
     t_test = to_categorical(t_test, n_classes).astype(np.float32)
 
-    # ===============================
-    # Instantiate ELM
-    # ===============================
+
+    # # ===============================
+    # # Instantiate ELM
+    # # ===============================
     model = ELM(
         n_input_nodes=28**2,
         n_hidden_nodes=args.n_hidden_nodes,
@@ -54,48 +58,53 @@ def main(args):
     # ===============================
     # Training
     # ===============================
-    model.fit(x_train, t_train)
-    train_loss, train_acc, train_uar = model.evaluate(x_train, t_train, metrics=['loss', 'accuracy', 'uar'])
-    print('train_loss: %f' % train_loss) # loss value
-    print('train_acc: %f' % train_acc) # accuracy
-    print('train_uar: %f' % train_uar) # uar (unweighted average recall)
+    # model.fit(x_train, t_train)
+    # train_loss, train_acc, train_uar = model.evaluate(x_train, t_train, metrics=['loss', 'accuracy', 'uar'])
+    # print('train_loss: %f' % train_loss) # loss value
+    # print('train_acc: %f' % train_acc) # accuracy
+    # print('train_uar: %f' % train_uar) # uar (unweighted average recall)
 
     # ===============================
     # Validation
     # ===============================
-    val_loss, val_acc, val_uar = model.evaluate(x_test, t_test, metrics=['loss', 'accuracy', 'uar'])
-    print('val_loss: %f' % val_loss)
-    print('val_acc: %f' % val_acc)
-    print('val_uar: %f' % val_uar)
+    print(x_test.shape, t_test.shape)
 
-    # ===============================
-    # Prediction
-    # ===============================
-    x = x_test[:10]
-    t = t_test[:10]
-    y = softmax(model.predict(x))
+    # val_loss, val_acc, val_uar = model.evaluate(x_test, t_test, metrics=['loss', 'accuracy', 'uar'])
+    # print('val_loss: %f' % val_loss)
+    # print('val_acc: %f' % val_acc)
+    # print('val_uar: %f' % val_uar)
 
-    for i in range(len(y)):
-        print('---------- prediction %d ----------' % (i+1))
-        class_pred = np.argmax(y[i])
-        prob_pred = y[i][class_pred]
-        class_true = np.argmax(t[i])
-        print('prediction:')
-        print('\tclass: %d, probability: %f' % (class_pred, prob_pred))
-        print('\tclass (true): %d' % class_true)
+    # # ===============================
+    # # Prediction
+    # # ===============================
+    # x = x_test[:10]
+    # t = t_test[:10]
+    # y = softmax(model.predict(x))
 
-    # ===============================
-    # Save model
-    # ===============================
-    print('saving model...')
-    model.save('model.h5')
-    del model
 
-    # ===============================
-    # Load model
-    # ===============================
-    print('loading model...')
-    model = load_model('model.h5')
+    # print(x_test.shape)
+
+    # for i in range(len(y)):
+    #     print('---------- prediction %d ----------' % (i+1))
+    #     class_pred = np.argmax(y[i])
+    #     prob_pred = y[i][class_pred]
+    #     class_true = np.argmax(t[i])
+    #     print('prediction:')
+    #     print('\tclass: %d, probability: %f' % (class_pred, prob_pred))
+    #     print('\tclass (true): %d' % class_true)
+
+    # # ===============================
+    # # Save model
+    # # ===============================
+    # print('saving model...')
+    # model.save('model.h5')
+    # del model
+
+    # # ===============================
+    # # Load model
+    # # ===============================
+    # print('loading model...')
+    # model = load_model('model.h5')
 
 
 if __name__ == '__main__':
